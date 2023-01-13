@@ -1,0 +1,59 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Developer {
+  ID: ID!
+  name: String!
+  projects: [String!]!
+  roles: [String!]!
+}
+
+type Project {
+  ID: ID!
+  name: String!
+  description: String!
+  status: Status!
+  developers: [String!]!
+  roles: [String!]!
+}
+
+"""The status of the project, it will be CLOSED or IN_PROGRESS"""
+enum Status {
+  CLOSED
+  IN_PROGRESS
+}
+
+type Query {
+  findAllProjects: [Project!]!
+  filterProjectByRol(rol: String!): [Project!]!
+  filterProjectByStatus(status: Float!): [Project!]!
+  developers: [Developer!]!
+  developer(id: Int!): Developer!
+}
+
+type Mutation {
+  createProject(projectInput: CreateProjectInput!): Project!
+  createDeveloper(createDeveloperInput: CreateDeveloperInput!): Developer!
+  updateDeveloper(updateDeveloperInput: UpdateDeveloperInput!): Developer!
+  removeDeveloper(id: Int!): Developer!
+}
+
+input CreateProjectInput {
+  name: String!
+  description: String!
+  status: Float!
+  developers: [String!]!
+  roles: [String!]!
+}
+
+input CreateDeveloperInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateDeveloperInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
