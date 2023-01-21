@@ -1,10 +1,18 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { ProjectsService } from './proyectos.service';
-import { Project } from './proyecto.entity';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
+import { ProjectsService } from './projects.service';
+import { Project } from './project.entity';
 import { CreateProjectInput } from './dto/create-project.input';
 import { Status } from 'src/lib/enum-types';
+import { Developer } from 'src/developers/developer.entity';
 
-@Resolver()
+@Resolver((of) => Project)
 export class ProyectosResolver {
   constructor(private projectsService: ProjectsService) {}
 
@@ -28,5 +36,12 @@ export class ProyectosResolver {
     @Args('projectInput') projectInput: CreateProjectInput,
   ): Promise<Project> {
     return this.projectsService.createProject(projectInput);
+  }
+
+  @ResolveField(() => [Developer])
+  async developersOnTheProject(
+    @Parent() project: Project,
+  ): Promise<Developer[]> {
+    return await this.projectsService.getDeveloper(project.ID);
   }
 }

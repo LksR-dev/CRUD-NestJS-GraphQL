@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { ProyectosModule } from './proyectos/proyectos.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { join } from 'path';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 import { DevelopersModule } from './developers/developers.module';
+import { ProjectsModule } from './projects/projects.module';
+import { RolesModule } from './roles/roles.module';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -20,10 +21,9 @@ import { DevelopersModule } from './developers/developers.module';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
-    ProyectosModule,
+    ProjectsModule,
     DevelopersModule,
-    // DevelopersModule,
-    // RolesModule,
+    RolesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

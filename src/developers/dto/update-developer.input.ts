@@ -1,8 +1,14 @@
 import { CreateDeveloperInput } from './create-developer.input';
 import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
+import { IsArray, IsInt } from 'class-validator';
 
 @InputType()
-export class UpdateDeveloperInput extends PartialType(CreateDeveloperInput) {
+export class UpdateDeveloperInput {
+  @IsInt()
   @Field(() => Int)
-  id: number;
+  ID: number;
+
+  @IsArray()
+  @Field(() => [Int])
+  projectID: number[];
 }

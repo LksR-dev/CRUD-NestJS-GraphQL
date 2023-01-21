@@ -1,16 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { Project } from './proyecto.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateProjectInput } from './dto/create-project.input';
-import { toLowerCaseAndTrim } from 'src/lib/tratamiento-string';
 import { Status } from 'src/lib/enum-types';
+import { toLowerCaseAndTrim } from 'src/lib/tratamiento-string';
+import { CreateProjectInput } from './dto/create-project.input';
+import { DevelopersService } from 'src/developers/developers.service';
+import { Developer } from 'src/developers/developer.entity';
+import { Project } from './project.entity';
 
 @Injectable()
 export class ProjectsService {
   constructor(
     @InjectRepository(Project)
     private projectsRepository: Repository<Project>,
+    private developersService: DevelopersService,
   ) {}
 
   async findAll(): Promise<Project[]> {
@@ -46,5 +49,9 @@ export class ProjectsService {
   async createProject(project: CreateProjectInput): Promise<Project> {
     const newProject = this.projectsRepository.create(project);
     return this.projectsRepository.save(newProject);
+  }
+
+  getDeveloper(projectID: number): Promise<Developer[]> {
+    return this.developersService.findAllDevelopersByProject(projectID);
   }
 }

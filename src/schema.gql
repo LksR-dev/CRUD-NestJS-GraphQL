@@ -2,20 +2,22 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Developer {
-  ID: ID!
+type Roles {
+  ID: Int!
   name: String!
-  projects: [String!]!
-  roles: [String!]!
+  developers: [Developers!]!
+  projects: [Projects!]!
 }
 
-type Project {
-  ID: ID!
+type Projects {
+  ID: Int!
   name: String!
   description: String!
   status: Status!
-  developers: [String!]!
-  roles: [String!]!
+  rolesID: [Int!]!
+  developers: [Developers!]!
+  roles: [Roles!]!
+  developersOnTheProject: [Developers!]!
 }
 
 """The status of the project, it will be CLOSED or IN_PROGRESS"""
@@ -24,36 +26,79 @@ enum Status {
   IN_PROGRESS
 }
 
-type Query {
-  findAllProjects: [Project!]!
-  filterProjectByRol(rol: String!): [Project!]!
-  filterProjectByStatus(status: Float!): [Project!]!
+type Developers {
+  ID: Int!
+  name: String!
+  email: String!
+  projects: [Projects!]!
+  roles: [String!]!
+  roleID: [Int!]!
+  projectID: [Int!]!
+}
+
+input Role {
+  ID: Int!
+  name: String!
   developers: [Developer!]!
-  developer(id: Int!): Developer!
+  projects: [Project!]!
+}
+
+input Project {
+  ID: Int!
+  name: String!
+  description: String!
+  status: Status!
+  rolesID: [Int!]!
+  developers: [Developer!]!
+  roles: [Role!]!
+  developersOnTheProject: [Developer!]!
+}
+
+input Developer {
+  ID: Int!
+  name: String!
+  email: String!
+  projects: [Project!]!
+  roles: [String!]!
+  roleID: [Int!]!
+  projectID: [Int!]!
+}
+
+type Query {
+  findAllProjects: [Projects!]!
+  filterProjectByRol(rol: String!): [Projects!]!
+  filterProjectByStatus(status: Float!): [Projects!]!
+  findAllDevs: [Developers!]!
+  findAllDevsByProject(id: Int!): [Developers!]!
+  findOne(id: Int!): Developers!
 }
 
 type Mutation {
-  createProject(projectInput: CreateProjectInput!): Project!
-  createDeveloper(createDeveloperInput: CreateDeveloperInput!): Developer!
-  updateDeveloper(updateDeveloperInput: UpdateDeveloperInput!): Developer!
-  removeDeveloper(id: Int!): Developer!
+  createProject(projectInput: CreateProjectInput!): Projects!
+  createDeveloper(createDeveloperInput: CreateDeveloperInput!): Developers!
+  updateDeveloper(updateDev: UpdateDeveloperInput!): Developers!
+  createRole(roleInput: CreateRoleInput!): Roles!
 }
 
 input CreateProjectInput {
   name: String!
   description: String!
   status: Float!
-  developers: [String!]!
-  roles: [String!]!
+  rolesID: [Int!]!
 }
 
 input CreateDeveloperInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  name: String!
+  email: String!
+  projectID: [Int!]!
+  roleID: [Int!]!
 }
 
 input UpdateDeveloperInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  ID: Int!
+  projectID: [Int!]!
+}
+
+input CreateRoleInput {
+  name: String!
 }

@@ -1,10 +1,10 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, Parent } from '@nestjs/graphql';
 import { DevelopersService } from './developers.service';
-import { Developer } from './entities/developer.entity';
+import { Developer } from './developer.entity';
 import { CreateDeveloperInput } from './dto/create-developer.input';
 import { UpdateDeveloperInput } from './dto/update-developer.input';
 
-@Resolver()
+@Resolver((of) => Developer)
 export class DevelopersResolver {
   constructor(private readonly developersService: DevelopersService) {}
 
@@ -15,28 +15,28 @@ export class DevelopersResolver {
     return this.developersService.create(createDeveloperInput);
   }
 
-  @Query(() => [Developer], { name: 'developers' })
-  findAll() {
+  @Query(() => [Developer])
+  findAllDevs() {
     return this.developersService.findAll();
   }
 
-  @Query(() => Developer, { name: 'developer' })
+  @Query(() => [Developer])
+  findAllDevsByProject(
+    @Args('id', { type: () => Int }) id: number,
+  ): Promise<Developer[]> {
+    return this.developersService.findAllDevelopersByProject(id);
+  }
+
+  @Query(() => Developer)
   findOne(@Args('id', { type: () => Int }) id: number) {
     return this.developersService.findOne(id);
   }
 
   @Mutation(() => Developer)
   updateDeveloper(
-    @Args('updateDeveloperInput') updateDeveloperInput: UpdateDeveloperInput,
+    @Args('updateDev')
+    updateDev: UpdateDeveloperInput,
   ) {
-    return this.developersService.update(
-      updateDeveloperInput.id,
-      updateDeveloperInput,
-    );
-  }
-
-  @Mutation(() => Developer)
-  removeDeveloper(@Args('id', { type: () => Int }) id: number) {
-    return this.developersService.remove(id);
+    return this.developersService.update(updateDev);
   }
 }
